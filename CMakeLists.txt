@@ -24,9 +24,9 @@ add_executable(vector
 #        data/one/code.cpp
 #        data/one.memcheck/code.cpp
 #        data/three/code.cpp
-#        data/three.memcheck/code.cpp
+        data/three.memcheck/code.cpp
 #        data/two/code.cpp
-        data/two.memcheck/code.cpp
+#        data/two.memcheck/code.cpp
         data/class-bint.hpp
         data/class-integer.hpp
         data/class-matrix.hpp
