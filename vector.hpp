@@ -14,7 +14,8 @@ public:
     class const_iterator;
     class iterator {
         friend class vector;
-    private:
+        friend class const_iterator;
+    public:
          vector *point;
          size_t cur_pos;
     public:
@@ -64,17 +65,72 @@ public:
             --cur_pos;
             return *this;
         }
+
         T& operator*() const{ return *(point->storage[cur_pos]);}		// *it
         bool operator==(const iterator &rhs) const { return (point == rhs.point) && (cur_pos == rhs.cur_pos);}
         bool operator==(const const_iterator &rhs) const { return (point == rhs.point) && (cur_pos == rhs.cur_pos);}
         bool operator!=(const iterator &rhs) const { return (point != rhs.point) || (cur_pos != rhs.cur_pos);}
         bool operator!=(const const_iterator &rhs) const { return (point != rhs.point) || (cur_pos != rhs.cur_pos);}
     };
-    class const_iterator : public iterator {
+    class const_iterator{
+        friend class vector;
+        friend class iterator;
     public:
-        const_iterator(vector *obj, size_t cur):iterator(obj, cur){}
-        const_iterator(const iterator &obj):iterator(obj){}
-        const_iterator(const const_iterator &obj):iterator(obj){}
+        vector *point;
+        size_t cur_pos;
+    public:
+        const_iterator(vector *obj, size_t cur) { point = obj; cur_pos = cur;}
+        const_iterator(const iterator &other) { point = other.point; cur_pos = other.cur_pos;}
+        const_iterator(const const_iterator &other) { point = other.point; cur_pos = other.cur_pos;}
+
+        const_iterator operator+(const int &n) const {
+            const_iterator tmp = *this;
+            tmp.cur_pos += n;
+            return tmp;
+        }
+        const_iterator operator-(const int &n) const {
+            const_iterator tmp = *this;
+            tmp.cur_pos -= n;
+            return tmp;
+        }
+        // return th distance between two iterator,
+        // if these two iterators points to different vectors, throw invaild_iterator.
+        int operator-(const iterator &rhs) const {
+            if (point != rhs.point) throw invalid_iterator ();
+            return cur_pos - rhs.cur_pos;
+        }
+        const_iterator& operator+=(const int &n) {
+            cur_pos += n;
+            return *this;
+        }
+        const_iterator& operator-=(const int &n) {
+            cur_pos -= n;
+            return  *this;
+        }
+        const_iterator operator++(int) {
+            const_iterator tmp = *this;
+            ++cur_pos;
+            return tmp;
+        }
+        const_iterator& operator++() {
+            ++cur_pos;
+            return *this;
+        }
+        const_iterator operator--(int) {
+            const_iterator tmp = *this;
+            --cur_pos;
+            return tmp;
+        }
+        const_iterator& operator--() {
+            --cur_pos;
+            return *this;
+        }
+
+        const T& operator*() const{ return *(point->storage[cur_pos]);}		// *it
+        bool operator==(const iterator &rhs) const { return (point == rhs.point) && (cur_pos == rhs.cur_pos);}
+        bool operator==(const const_iterator &rhs) const { return (point == rhs.point) && (cur_pos == rhs.cur_pos);}
+        bool operator!=(const iterator &rhs) const { return (point != rhs.point) || (cur_pos != rhs.cur_pos);}
+        bool operator!=(const const_iterator &rhs) const { return (point != rhs.point) || (cur_pos != rhs.cur_pos);}
     };
 
 private:
